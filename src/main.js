@@ -78,3 +78,48 @@ const onSearchFormSubmit = async event => {
     console.log(error);
   }
 };
+const onLoadButtonClick = async () => {
+  try {
+    const galleryItemDimensions = document
+      .querySelector('.gallery-item')
+      .getBoundingClientRect();
+
+    currentPage++;
+
+    elements.loadButton.classList.remove('is-visible');
+    elements.loader.classList.add('is-visible');
+
+    const response = await getData(searchInputValue, currentPage);
+    const { data } = response;
+
+    elements.loader.classList.remove('is-visible');
+    elements.loadButton.classList.add('is-visible');
+
+    elements.gallery.insertAdjacentHTML('beforeend', renderElements(data.hits));
+
+    imageModal.refresh();
+
+    scrollBy({
+      top: galleryItemDimensions.height * 2,
+      behavior: 'smooth',
+    });
+
+    if (
+      response.config.params.page * response.config.params.per_page >=
+      data.totalHits
+    ) {
+      messages.loadsLimit();
+
+      elements.loadButton.classList.remove('is-visible');
+
+      return;
+    }
+  } catch (error) {
+    elements.loader.classList.remove('is-visible');
+
+    console.log(error);
+  }
+};
+
+elements.searchForm.addEventListener('submit', onSearchFormSubmit);
+elements.loadButton.addEventListener('click', onLoadButtonClick);
