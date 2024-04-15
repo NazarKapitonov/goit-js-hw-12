@@ -1,0 +1,16 @@
+import axios from 'axios';
+
+export const getData = (searchQuery, currentPage) => {
+  const axiosOptions = {
+    params: {
+      key: '43314444-d9e0e152357d5f337246a957f',
+      q: searchQuery,
+      image_type: 'photo',
+      orientation: 'horizontal',
+      safesearch: true,
+      page: currentPage,
+      per_page: 15,
+    },
+  };
+  return axios.get('https://pixabay.com/api', axiosOptions);
+};
