@@ -37,3 +37,44 @@ const imageModal = new SimpleLightbox('.gallery a', lightboxOptions);
 
 let currentPage = null;
 let searchInputValue = null;
+const onSearchFormSubmit = async event => {
+  try {
+    event.preventDefault();
+
+    currentPage = 1;
+
+    elements.gallery.innerHTML = '';
+
+    elements.loader.classList.add('is-visible');
+    elements.loadButton.classList.remove('is-visible');
+
+    searchInputValue = event.srcElement.elements.search_input.value;
+
+    const response = await getData(searchInputValue, currentPage);
+    const { data } = response;
+
+    elements.loader.classList.remove('is-visible');
+
+    if (data.hits.length === 0) {
+      messages.noMatches();
+
+      return;
+    }
+
+    elements.gallery.innerHTML = renderElements(data.hits);
+
+    imageModal.refresh();
+
+    if (data.totalHits <= 15) {
+      messages.loadsLimit();
+
+      return;
+    }
+
+    elements.loadButton.classList.add('is-visible');
+  } catch (error) {
+    elements.loader.classList.remove('is-visible');
+
+    console.log(error);
+  }
+};
