@@ -29,3 +29,11 @@ const messages = {
     });
   },
 };
+const lightboxOptions = {
+  captionsData: 'alt',
+  captionDelay: 250,
+};
+const imageModal = new SimpleLightbox('.gallery a', lightboxOptions);
+
+let currentPage = null;
+let searchInputValue = null;
